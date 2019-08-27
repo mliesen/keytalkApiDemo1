@@ -1,0 +1,18 @@
+{
+  "name": "logvalues",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Martin Liesén <martin.liesen@keylogic.se>",
+  "license": "ISC",
+  "dependencies": {
+    "@types/lodash": "^4.14.137",
+    "@types/node": "^12.7.2",
+    "@types/q": "^1.5.2",
+    "keytalk-api": "^1.0.9",
+    "lodash": "^4.17.15"
+  }
+}

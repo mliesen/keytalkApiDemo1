@@ -1,0 +1,9 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        "typedef":false,
+        "space-before-function-paren":false,
+        "space-within-parens":false,
+        //"whitespace":false
+    }
+}
