@@ -2,10 +2,12 @@ import kt from "keytalk-api";
 import * as fs from "fs";
 import Q from "q";
 import { kStringMaxLength } from "buffer";
+import { KeyLib } from "keytalk-api/dist/keyLib2";
 
 interface ITag {
     tag :string;
     floatres?: string;
+    poll?: string;
 }
 
 interface IDevice {
@@ -37,6 +39,11 @@ class Tag {
     private ci?: kt.engine.IKeyTalkClientItem;
     private lastNull:boolean=false;
     private lastErr: boolean = false;
+    private isPoll: boolean = false;
+    private pollInterv: number = 0;
+    private pollLastVal: string|undefined=undefined;
+    private pollLastErr: string|undefined=undefined;
+    private pollNext: number=0;
     private writeDataToFile(v:kt.engine.IKeyTalkValue) {
         if (!this.device.stream)
             return;
@@ -44,25 +51,61 @@ class Tag {
             return;
         this.lastErr=v.isError();
         this.lastNull=v.isNull();
-        let txt = `${this.cfg.tag}\t${date2string(new Date)}\t${v.typ}\t${value2string(v, this.fr)}`;
+        let txt = `${date2string(new Date)}\t${this.cfg.tag}\t${v.typ}\t${value2string(v, this.fr)}`;
         this.device.stream.write(txt +"\r\n");
-        console.log(txt);
+        let txt2 = `${date2string(new Date)}\t${this.device.cfg.filename}\t${this.cfg.tag}\t${v.typ}\t${value2string(v, this.fr)}`;
+        console.log(txt2);
     }
     constructor(dev:Device,cfg:ITag) {
         this.cfg=cfg;
         this.device=dev;
         if(cfg.floatres)
             this.fr = kt.keyLib.FloatEx.floatFormat(cfg.floatres);
+        if (cfg.poll) {
+            this.pollInterv=KeyLib.TimeSpanEx.timeLenStr2msek(cfg.poll)
+        }
+        this.isPoll = this.pollInterv>0;
+        this.pollNext = (new Date().valueOf());
     }
     public startSubscr() {
-        this.ci=this.device.eng.subscribe(this.cfg.tag,(ci,va)=> {
-            this.writeDataToFile(va);
-        },this.cfg.floatres);
+        if(!this.isPoll) {
+            this.ci = this.device.eng.subscribe(this.cfg.tag, (ci, va) => {
+                this.writeDataToFile(va);
+            }, this.cfg.floatres);
+        }
     }
     public endSubscr() {
-        if(this.ci)
-            this.ci.cancel();
-        this.ci=undefined;
+        if (!this.isPoll) {
+            if(this.ci)
+                this.ci.cancel();
+            this.ci=undefined;
+        }
+    }
+    public doTimer(tic:number) {
+        if(this.isPoll && (tic>=this.pollNext) && this.ci===undefined) {
+            this.pollNext = this.pollNext + this.pollInterv;
+            this.ci=this.device.eng.requestAsync(this.cfg.tag);
+            this.ci.promise()
+            .then(
+                (v)=> {
+                    if(v.error===this.pollLastErr && v.v===this.pollLastVal)
+                        return;
+                    this.pollLastErr=v.error;
+                    this.pollLastVal=v.v;
+                    this.writeDataToFile(v);
+                },
+                (err)=> {
+                    console.log(" poll error: " + err);
+                }
+            )
+            .catch(err=>{
+                console.log(" poll exception: " + err);
+            })
+            .finally(()=> {
+                this.ci = undefined;
+           })
+            ;
+        }
     }
 }
 
@@ -72,7 +115,7 @@ class Device {
     public eng: kt.engine.KeyTalkEngine;
     public stream?: fs.WriteStream;
     private state: DeviceState=DeviceState.idle;
-    private cfg: IDevice;
+    public cfg: IDevice;
     private tags: Tag[];
     private wantClose:boolean=false;
     private closedPromise:Q.Deferred<void>=Q.defer<void>();
@@ -85,7 +128,7 @@ class Device {
         switch(s) {
             case DeviceState.connecting:
                 this.timeout=new Date().valueOf()+30*1000;
-                this.eng.login("keylogic", "freda..").then(
+                this.eng.login(this.cfg.user, this.cfg.password).then(
                     () => {
                         this.enterState(DeviceState.startSubscr);
                     },
@@ -140,8 +183,11 @@ class Device {
                 if(!this.eng.connectionOk()) {
                     console.log("connection not ok " + this.cfg.url);
                     this.enterState(DeviceState.fail);
-
+                } else {
+                    let tic=new Date().valueOf();
+                    this.tags.forEach(t=> t.doTimer(tic))
                 }
+
         }
     }
     constructor(cfg:IDevice) {
@@ -184,6 +230,7 @@ if (process.platform === "win32") {
     });
 
     rl.on("SIGINT", function () {
+        //@ts-ignore
         process.emit("SIGINT");
     });
 }

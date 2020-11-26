@@ -9,10 +9,10 @@
   "author": "Martin Liesén <martin.liesen@keylogic.se>",
   "license": "ISC",
   "dependencies": {
-    "@types/lodash": "^4.14.137",
-    "@types/node": "^12.7.2",
-    "@types/q": "^1.5.2",
-    "keytalk-api": "^1.0.9",
-    "lodash": "^4.17.15"
+    "@types/lodash": "^4.14.165",
+    "@types/node": "^12.19.6",
+    "@types/q": "^1.5.4",
+    "keytalk-api": "^1.0.12",
+    "lodash": "^4.17.20"
   }
 }
