@@ -26,7 +26,7 @@ function date2string(d: Date): string {
     return kt.keyLib.DateTimeEx.dateTimeToString(d)
 }
 function value2string(v: kt.engine.IKeyTalkValue, fr?: kt.keyLib.FloatEx.IFloatFormat ): string {
-    if(v.isValue && fr && (v.typ==="SINGLE" || v.typ==="DOUBLE")) {
+    if(v.isValue() && fr && (v.typ==="SINGLE" || v.typ==="DOUBLE")) {
         return fr.convert(v.asNumber());
     }
     return v.v;
