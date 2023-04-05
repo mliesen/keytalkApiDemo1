@@ -1,26 +1,27 @@
 import kt from "keytalk-api";
 import * as fs from "fs";
+import { jsonc } from "jsonc";
 import Q from "q";
-import { kStringMaxLength } from "buffer";
 import { KeyLib } from "keytalk-api/dist/keyLib2";
 
-interface ITag {
+export interface ITag {
     tag :string;
     floatres?: string;
     poll?: string;
 }
 
-interface IDevice {
+export interface IDevice {
     url: string;
     user: string;
     password: string;
     tags: ITag[];
     filename: string;
-    append: boolean;
+    append?: boolean;
 }
 
-interface IConfigFile {
+export interface IConfigFile {
     devices: IDevice[];
+    $schema?: string;
 }
 
 function date2string(d: Date): string {
@@ -174,7 +175,6 @@ class Device {
     }
     public doTimer() {
         let tid=new Date().valueOf();
-        //this.eng.testTimeouts();
         switch (this.state) {
             case DeviceState.fail:
                 if(tid>this.timeout)
@@ -217,7 +217,7 @@ class Device {
 
 // --- Uppstart
 console.log("Startar");
-let indata: IConfigFile = JSON.parse(fs.readFileSync("config.json", 'utf8'));
+let indata: IConfigFile = jsonc.parse(fs.readFileSync("config.jsonc", 'utf8'));
 let devices=indata.devices.map(d=> new Device(d));
 
 let timer=setInterval(()=>{

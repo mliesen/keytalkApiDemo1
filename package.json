@@ -12,6 +12,7 @@
     "@types/lodash": "^4.14.165",
     "@types/node": "^12.19.6",
     "@types/q": "^1.5.4",
+    "jsonc": "^2.0.0",
     "keytalk-api": "^1.0.12",
     "lodash": "^4.17.20"
   }

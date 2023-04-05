@@ -1,0 +1,27 @@
+{
+    "$schema": "./config.schema.json",
+    "devices": [
+        {
+            //"url": "https://keytalkqa.volvocars.net/",
+            "url": "http://keytalkqa.volvocars.net:81/",
+            "user": "xxxx",
+            "password": "xxxx",
+            "filename": "output.txt",
+            "tags": [
+                {
+                    "tag": "Internal\\Variabler.1_Utet"
+                },
+                {
+                    "tag": "Internal\\Variabler.1_GMUte"
+                },
+                {
+                    "tag": "15-VE-01-DUC01\\Root\\FirstDevice\\MAIN.VE01.GT1E.PV"
+                },
+                {
+                    "tag": "*time"
+                }
+            ]
+        }
+    ]
+}
+

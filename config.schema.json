@@ -1,0 +1,76 @@
+{
+  "$ref": "#/definitions/IConfigFile",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "IConfigFile": {
+      "additionalProperties": false,
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "devices": {
+          "items": {
+            "$ref": "#/definitions/IDevice"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "devices"
+      ],
+      "type": "object"
+    },
+    "IDevice": {
+      "additionalProperties": false,
+      "properties": {
+        "append": {
+          "type": "boolean"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "tags": {
+          "items": {
+            "$ref": "#/definitions/ITag"
+          },
+          "type": "array"
+        },
+        "url": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url",
+        "user",
+        "password",
+        "tags",
+        "filename"
+      ],
+      "type": "object"
+    },
+    "ITag": {
+      "additionalProperties": false,
+      "properties": {
+        "floatres": {
+          "type": "string"
+        },
+        "poll": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "tag"
+      ],
+      "type": "object"
+    }
+  }
+}
