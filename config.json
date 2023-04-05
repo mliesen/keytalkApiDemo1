@@ -1,0 +1,96 @@
+{
+    "devices": [
+        {
+            "url": "http://10.32.36.50/",
+            "user": "martin.liesen",
+            "password": "xxx",
+            "filename": "MW____.txt",
+            "tags": [
+                {
+                    "tag": "\\AS1031*subscribeCount"
+                },
+                {
+                    "tag": "\\AS1061*subscribeCount"
+                },
+                {
+                    "tag": "\\AS1031*state"
+                },
+                {
+                    "tag": "\\AS1061*state"
+                }
+            ]
+        },
+        {
+            "url": "http://10.32.36.107/",
+            "user": "martin.liesen",
+            "password": "xxxx",
+            "filename": "AS1061.txt",
+            "tags": [
+                {
+                    "tag": "\\TCPIP1*subscribeCount"
+                },
+                {
+                    "tag": "\\TCPIP1*jobbQue"
+                },
+                {
+                    "tag": "\\TCPIP1*debugInfo",
+                    "poll": "30s"
+                },
+                {
+                    "tag": "\\TCPIP1*inspectConns",
+                    "poll": "30s"
+                }
+            ]
+        },
+        {
+            "url": "http://10.32.36.89/",
+            "user": "martin.liesen",
+            "password": "xxx",
+            "filename": "AS1031.txt",
+            "tags": [
+                {
+                    "tag": "\\TCPIP1*subscribeCount"
+                },
+                {
+                    "tag": "\\TCPIP1*jobbQue"
+                },
+                {
+                    "tag": "\\TCPIP1*debugInfo",
+                    "poll": "30s"
+                },
+                {
+                    "tag": "\\TCPIP1*inspectConns",
+                    "poll": "30s"
+                }
+            ],
+            "xxx": [
+            ]
+
+        }
+    ],
+    "dummy": [
+        {
+            "url": "http://192.168.10.23/",
+            "user": "keylogic",
+            "password": "freda..",
+            "filename": "test2.txt",
+            "tags": [
+                {
+                    "tag": "FirstDevice\\MAIN.BEL.BelGrp2.GN11_V_KNX",
+                    "XXfloatres": "0.1"
+                },
+                {
+                    "tag": "FirstDevice\\MAIN.KNX.Test_GN12.NDxx_V"
+                },
+                {
+                    "tag": "FirstDevice\\MAIN.KNX.Test_GN12.NDxx_V1"
+                },
+                {
+                    "tag": "FirstDevice\\MAIN.KNX.Test_GN12.NDxx_V2"
+                }
+            ]
+        }
+    ]
+
+}
+

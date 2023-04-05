@@ -16,6 +16,7 @@ interface IDevice {
     password: string;
     tags: ITag[];
     filename: string;
+    append: boolean;
 }
 
 interface IConfigFile {
@@ -184,6 +185,7 @@ class Device {
                     console.log("connection not ok " + this.cfg.url);
                     this.enterState(DeviceState.fail);
                 } else {
+                    this.eng.testTimeouts();
                     let tic=new Date().valueOf();
                     this.tags.forEach(t=> t.doTimer(tic))
                 }
@@ -192,7 +194,10 @@ class Device {
     }
     constructor(cfg:IDevice) {
         this.cfg=cfg;
-        this.stream = fs.createWriteStream(cfg.filename, { flags: 'w', encoding: "utf8" });
+        if(cfg.append??false)
+            this.stream = fs.createWriteStream(cfg.filename, { flags: 'a', encoding: "utf8" });
+        else
+            this.stream = fs.createWriteStream(cfg.filename, { flags: 'w', encoding: "utf8" });
         this.eng = new kt.engine.KeyTalkEngine();
         this.eng.url=cfg.url;
         this.tags=cfg.tags.map(x=> new Tag(this,x));
